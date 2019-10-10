@@ -10,8 +10,8 @@ from plotly.graph_objs import Figure
 
 leagueRound = 9
 
-fixtures = getFixtures(9)
-fullTable = getLeagueTable(9)
+fixtures = getFixtures(leagueRound)
+fullTable = getLeagueTable(leagueRound)
 allTeams = fullTable["Team"]
 fullWorstTable = getWorstPosition(fixtures, fullTable, allTeams)
 fullBestTable = getBestPosition(fixtures, fullTable, allTeams)
