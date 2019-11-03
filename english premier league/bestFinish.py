@@ -1,23 +1,21 @@
 import pandas
 import getLeagueData
 
-secondDict = {}
-secondDict["Team"] = []
-secondDict["Points"] = []
-
 bestPosition = {}
 bestPosition["Team"] = []
 bestPosition["Position"] = []
 
 def getBestPosition(fixtures, fullTable, topToBottomTeams):
+	secondDict = {}
+	secondDict["Team"] = []
+	secondDict["Points"] = []
 	for teamName in topToBottomTeams:
 	    limit = fullTable["Points"].loc[fullTable["Team"] == teamName].values[0]     
 	    reachers = pandas.DataFrame(fullTable[["Team", "Points", "GD"]].loc[(fullTable["Points"] >= (limit - 3)) & (fullTable["Points"] <= (limit + 3))].sort_values(
 	        ["Points", "GD"], ascending=False))
 	    restOfTheTable = pandas.DataFrame(fullTable[["Team", "Points", "GD"]].loc[(fullTable["Points"] < (limit - 3)) | (fullTable["Points"] > (limit + 3))].sort_values(
 	        ["Points", "GD"], ascending=False))
-	    vincTeams = reachers["Team"].tolist()
-	    print(vincTeams)
+	    vincTeams = reachers["Team"].tolist()	  
 	    for reachedTeam in vincTeams:
 	        for key, value in fixtures.items():
 	            if (value[0] not in secondDict["Team"]) and (value[1] not in secondDict["Team"]): 
@@ -96,5 +94,8 @@ def getBestPosition(fixtures, fullTable, topToBottomTeams):
 	    collectedTable.iloc[firstTeam] = sTeam
 	    collectedTable.iloc[currentTeam] = tTeam
 	    bestPosition["Position"].append(collectedTable.loc[collectedTable["Team"] == teamName].index.item() + 1)
+	    secondDict = {}
+	    secondDict["Team"] = []
+	    secondDict["Points"] = []	    
 	fullBestTable = pandas.DataFrame(bestPosition)
 	return fullBestTable
