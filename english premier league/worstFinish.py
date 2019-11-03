@@ -1,15 +1,14 @@
 import pandas
 import getLeagueData
 
-secondDict = {}
-secondDict["Team"] = []
-secondDict["Points"] = []
-
 worstPosition = {}
 worstPosition["Team"] = []
 worstPosition["Position"] = []
 
 def getWorstPosition(fixtures, fullTable, topToBottomTeams):
+	secondDict = {}
+	secondDict["Team"] = []
+	secondDict["Points"] = []
 	for teamName in topToBottomTeams:
 	    limit = fullTable["Points"].loc[fullTable["Team"] == teamName].values[0]     
 	    reachers = pandas.DataFrame(fullTable[["Team", "Points", "GD"]].loc[(fullTable["Points"] >= (limit - 3)) & (fullTable["Points"] <= (limit + 3))].sort_values(
@@ -17,11 +16,9 @@ def getWorstPosition(fixtures, fullTable, topToBottomTeams):
 	    restOfTheTable = pandas.DataFrame(fullTable[["Team", "Points", "GD"]].loc[(fullTable["Points"] < (limit - 3)) | (fullTable["Points"] > (limit + 3))].sort_values(
 	        ["Points", "GD"], ascending=False))
 	    vincTeams = reachers["Team"].tolist()
-	    print(vincTeams)
 	    for reachedTeam in vincTeams:
 	        for key, value in fixtures.items():
-	            if (value[0] not in secondDict["Team"]) and (value[1] not in secondDict["Team"]):
-	                print(fullTable["Points"].loc[fullTable["Team"] == value[0]])
+	            if (value[0] not in secondDict["Team"]) and (value[1] not in secondDict["Team"]):	            
 	                valueOnePoints = fullTable["Points"].loc[fullTable["Team"] == value[0]].values[0]
 	                valueTwoPoints = fullTable["Points"].loc[fullTable["Team"] == value[1]].values[0]
 	                if (reachedTeam == value[0]) and (reachedTeam == teamName):
@@ -89,5 +86,8 @@ def getWorstPosition(fixtures, fullTable, topToBottomTeams):
 	    collectedTable.iloc[firstTeam] = sTeam
 	    collectedTable.iloc[currentTeam] = tTeam
 	    worstPosition["Position"].append(collectedTable.loc[collectedTable["Team"] == teamName].index.item() + 1)
+	    secondDict = {}
+	    secondDict["Team"] = []
+	    secondDict["Points"] = []
 	fullWorstTable = pandas.DataFrame(worstPosition)
 	return fullWorstTable
